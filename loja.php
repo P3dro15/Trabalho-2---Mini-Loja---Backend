@@ -1,17 +1,22 @@
 <?php
 /**
  * ╔══════════════════════════════════════════╗
- *   LOJA DO AVENTUREIRO — Servidor PHP
- *   Arquivo: loja.php
+ * LOJA DO AVENTUREIRO — Servidor PHP
+ * Arquivo: loja.php
  * ╚══════════════════════════════════════════╝
  *
  * ENDPOINTS:
- *   GET loja.php?action=listar
- *       → retorna todos os itens da loja
+ * GET loja.php?action=listar
+ * → retorna todos os itens da loja
  *
- *   GET loja.php?item_id=N&moedas=M
- *       → tenta comprar item N com M moedas
+ * GET loja.php?item_id=N&moedas=M
+ * → tenta comprar item N com M moedas
  */
+
+// ── Blindagem contra Erros ───────────────────────────────────────────────────
+// Impede que o PHP injete avisos de texto (Warnings/Notices) no meio do JSON
+error_reporting(0);
+ini_set('display_errors', 0);
 
 // ── Cabeçalhos ───────────────────────────────────────────────────────────────
 header("Content-Type: application/json; charset=UTF-8");
@@ -21,18 +26,35 @@ header("Access-Control-Allow-Methods: GET");
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function responder(array $payload, int $status = 200): void {
     http_response_code($status);
-    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    
+    // Tenta codificar o array para JSON
+    $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    
+    // Se o json_encode falhar (geralmente por caracteres corrompidos no itens.json)
+    if ($json === false) {
+        echo json_encode([
+            "sucesso" => false,
+            "erro"    => "Erro interno: O PHP nao conseguiu gerar o JSON. Verifique se o arquivo data/itens.json esta salvo em UTF-8 e sem erros de sintaxe.",
+            "total"   => 0,
+            "itens"   => []
+        ]);
+    } else {
+        echo $json;
+    }
     exit;
 }
 
 function carregarItens(): array {
     $path = __DIR__ . "/data/itens.json";
     if (!file_exists($path)) {
-        responder(["sucesso" => false, "erro" => "Arquivo de itens não encontrado."], 500);
+        responder(["sucesso" => false, "erro" => "Arquivo de itens nao encontrado.", "total" => 0, "itens" => []], 500);
     }
-    $data = json_decode(file_get_contents($path), true);
+    
+    $conteudo = file_get_contents($path);
+    $data = json_decode($conteudo, true);
+    
     if ($data === null) {
-        responder(["sucesso" => false, "erro" => "Erro ao ler itens.json."], 500);
+        responder(["sucesso" => false, "erro" => "Erro de sintaxe ao ler data/itens.json. Verifique virgulas ou aspas extras.", "total" => 0, "itens" => []], 500);
     }
     return $data;
 }
@@ -55,6 +77,7 @@ $itens = carregarItens();
 if ($action === "listar") {
     responder([
         "sucesso" => true,
+        "erro"    => "",
         "total"   => count($itens),
         "itens"   => $itens
     ]);
@@ -67,13 +90,13 @@ if ($itemId !== null || $moedas !== null) {
     if ($itemId === null || !is_numeric($itemId) || (int)$itemId <= 0) {
         responder([
             "sucesso" => false,
-            "erro"    => "Parâmetro 'item_id' ausente ou inválido."
+            "erro"    => "Parametro 'item_id' ausente ou invalido."
         ], 400);
     }
     if ($moedas === null || !is_numeric($moedas) || (int)$moedas < 0) {
         responder([
             "sucesso" => false,
-            "erro"    => "Parâmetro 'moedas' ausente ou inválido."
+            "erro"    => "Parametro 'moedas' ausente ou invalido."
         ], 400);
     }
 
@@ -85,7 +108,7 @@ if ($itemId !== null || $moedas !== null) {
     if ($item === null) {
         responder([
             "sucesso" => false,
-            "erro"    => "Item #$itemId não encontrado na loja."
+            "erro"    => "Item #$itemId nao encontrado na loja."
         ], 404);
     }
 
@@ -104,6 +127,7 @@ if ($itemId !== null || $moedas !== null) {
     responder([
         "sucesso"          => true,
         "mensagem"         => "Compra realizada com sucesso!",
+        "erro"             => "",
         "item"             => $item,
         "moedas_gastas"    => $item["preco"],
         "moedas_restantes" => $moedas - $item["preco"]
@@ -113,7 +137,7 @@ if ($itemId !== null || $moedas !== null) {
 // ── Sem parâmetros reconhecidos ───────────────────────────────────────────────
 responder([
     "sucesso" => false,
-    "erro"    => "Requisição inválida.",
+    "erro"    => "Requisicao invalida.",
     "exemplos" => [
         "listar"  => "GET loja.php?action=listar",
         "comprar" => "GET loja.php?item_id=1&moedas=100"
