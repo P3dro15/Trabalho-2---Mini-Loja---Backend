@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "nome": "Espada de Ferro",
+    "descricao": "Lâmina forjada em ferro puro. Confiável e resistente.",
+    "preco": 40,
+    "tipo": "arma",
+    "raridade": "comum",
+    "ataque": 12,
+    "defesa": 0,
+    "emoji": "⚔️"
+  },
+  {
+    "id": 2,
+    "nome": "Escudo de Carvalho",
+    "descricao": "Escudo leve talhado em carvalho encantado da floresta.",
+    "preco": 30,
+    "tipo": "armadura",
+    "raridade": "comum",
+    "ataque": 0,
+    "defesa": 15,
+    "emoji": "🛡️"
+  },
+  {
+    "id": 3,
+    "nome": "Poção de Vida",
+    "descricao": "Restaura 50 pontos de vida. Gosto de framboesa.",
+    "preco": 20,
+    "tipo": "consumivel",
+    "raridade": "comum",
+    "ataque": 0,
+    "defesa": 0,
+    "cura": 50,
+    "emoji": "🧪"
+  },
+  {
+    "id": 4,
+    "nome": "Arco Élfio",
+    "descricao": "Crafted pelos elfos da floresta eterna. Alcance e precisão únicos.",
+    "preco": 110,
+    "tipo": "arma",
+    "raridade": "incomum",
+    "ataque": 28,
+    "defesa": 0,
+    "emoji": "🏹"
+  },
+  {
+    "id": 5,
+    "nome": "Botas de Vento",
+    "descricao": "Pés tocam o chão como brisa. Velocidade +40%.",
+    "preco": 75,
+    "tipo": "armadura",
+    "raridade": "incomum",
+    "ataque": 0,
+    "defesa": 8,
+    "velocidade": 40,
+    "emoji": "👢"
+  },
+  {
+    "id": 6,
+    "nome": "Cajado das Chamas",
+    "descricao": "Canaliza o fogo das profundezas. Poder mágico imenso.",
+    "preco": 160,
+    "tipo": "arma",
+    "raridade": "raro",
+    "ataque": 45,
+    "defesa": 0,
+    "emoji": "🔥"
+  },
+  {
+    "id": 7,
+    "nome": "Amuleto da Sorte",
+    "descricao": "Drop de itens raros +25%. Bênção dos deuses antigos.",
+    "preco": 190,
+    "tipo": "acessorio",
+    "raridade": "raro",
+    "ataque": 5,
+    "defesa": 5,
+    "emoji": "📿"
+  },
+  {
+    "id": 8,
+    "nome": "Lâmina Amaldiçoada",
+    "descricao": "Forjada na escuridão. Poder imenso — e um custo.",
+    "preco": 280,
+    "tipo": "arma",
+    "raridade": "epico",
+    "ataque": 70,
+    "defesa": 0,
+    "emoji": "🗡️"
+  }
+]
